@@ -13,15 +13,9 @@ class ChatRoom extends Component{
     componentDidMount(){
         const { roomId, logId }= this.props.match.params
         this.props.getRoomData(roomId, logId);
-    }
-    componentWillReceiveProps(nextProps){
-        if(!this.props.roomInfo.chatLogId && nextProps.roomInfo.chatLogId){
-            console.log('we should have chatlog id');
-
-            db.ref(`/chat-log/${nextProps.roomInfo.chatLogId}`).on('value', snapshot=>{
-                this.props.getChatLog(snapshot.val())
-            });
-        }
+        db.ref(`/chat-log/${logId}`).on('value', snapshot => {
+            this.props.getChatLog(snapshot.val())
+        });
     }
     sendMessage(e){
         e.preventDefault();
@@ -31,7 +25,6 @@ class ChatRoom extends Component{
         this.setState({message: ''})
     }
     render(){
-        console.log('chat info: ', this.props)
         const { name } = this.props.roomInfo;
         const { chatLog } = this.props;
 
