@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { getRoomData, getChatLog, sendNewMessage } from '../actions';
 import { db } from '../firebase';
 
@@ -16,6 +17,9 @@ class ChatRoom extends Component{
         db.ref(`/chat-log/${logId}`).on('value', snapshot => {
             this.props.getChatLog(snapshot.val())
         });
+    }
+    componentWillUnmount(){
+        db.ref(`/chat-log/${this.props.match.params.logId}`).off();
     }
     sendMessage(e){
         e.preventDefault();
@@ -36,6 +40,7 @@ class ChatRoom extends Component{
         
         return (
             <div>
+                <Link to='/' className= 'btn pink darken-1'>Go back home</Link>
                 <h3>{name ? name : 'Loading...'}</h3>
 
                 <form onSubmit={this.sendMessage.bind(this)}>
